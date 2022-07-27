@@ -1,0 +1,76 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "HBIOS-SYS";
+}
+canvas {
+  display: block;
+  box-shadow: #422800 4px 4px 0 0;
+  transform: translate(2px, 2px);
+  margin: auto;
+}
+input {
+  width: 100% !important;
+  padding: 4px;
+  margin-bottom: 4px;
+  text-align: center;
+  font-size: 40px;
+}
+p {
+  margin: 16px 0px 8px 0px;
+  text-align: center;
+  font-size: 24px;
+}
+
+/* CSS */
+.button-74 {
+  background-color: #b6b6f7;
+  border: 2px solid #422800;
+  border-radius: 30px;
+  box-shadow: #422800 4px 4px 0 0;
+  color: #422800;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 18px;
+  padding: 0 18px;
+  line-height: 50px;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-74:hover {
+  background-color: #fff;
+}
+
+.button-74:active {
+  box-shadow: #422800 2px 2px 0 0;
+  transform: translate(2px, 2px);
+}
+
+@media (min-width: 768px) {
+  .button-74 {
+    min-width: 120px;
+    padding: 0 25px;
+  }
+}
+
+.input-holder {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  justify-content: center;
+  margin: auto;
+}
+
+@font-face {
+  font-family: "HBIOS-SYS";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2207-01@1.0/HBIOS-SYS.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
