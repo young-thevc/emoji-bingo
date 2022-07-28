@@ -246,6 +246,15 @@ function FixBoard() {
       "7EmojiBingo-" + hours + "_" + minutes + "-" + bingo_cnt + "bingo",
       "jpg"
     );
+
+    let canvas_data = canvas.toDataURL();
+
+    let imageWin = window.open("", "imageWin");
+    imageWin.document.write("<html><body style='margin:0'>");
+    imageWin.document.write("<img src='" + canvas_data + "'>");
+    imageWin.document.write("</body><html>");
+    imageWin.document.title =
+      "7EmojiBingo-" + hours + "_" + minutes + "-" + bingo_cnt + "bingo";
   });
   save_button.class("button-74");
   save_button.parent(div_input_holder);
