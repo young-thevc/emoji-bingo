@@ -143,7 +143,7 @@ function draw() {
 
 let ready_for_new_touch = true;
 function touchStarted() {
-  if (!is_playing) return;
+  if (!is_playing || !ready_for_new_touch) return;
 
   for (let i = 0; i < bingo_size; i++) {
     for (let j = 0; j < bingo_size; j++) {
@@ -153,20 +153,20 @@ function touchStarted() {
         (height / bingo_size) * j < mouseY &&
         mouseY < (height / bingo_size) * (j + 1)
       ) {
-        if (!ready_for_new_touch) {
-          return;
-        }
         const idx = i * bingo_size + j;
         is_selected[idx] = !is_selected[idx];
         ready_for_new_touch = false;
-        continue;
+        setTimeout("reset_touch()", 200);
+        break;
       }
     }
   }
 }
+function reset_touch() {
+  ready_for_new_touch = true;
+}
 
 function touchEnded() {
-  ready_for_new_touch = true;
   bingo_cnt = checkBingo();
   changeBingoCountText(bingo_cnt);
 }
