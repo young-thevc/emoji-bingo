@@ -1,4 +1,20 @@
-let emoji_sample = "😀😃😄😁😆😅😂🤣";
+let emoji_sample = [
+  "🦝",
+  "👩‍🍳",
+  "🔥",
+  "🍣",
+  "🥘",
+  "🍮",
+  "🍩",
+  "🍫",
+  "🔴",
+  "🟡",
+  "🟢",
+  "🚌",
+  "🚇️",
+  "☔︎",
+  "☃︎",
+];
 let emojis;
 const bingo_size = 3;
 let inputs = [];
@@ -30,11 +46,34 @@ function setup() {
   let p_input_text = createP("8개 이모지를 입력해주세요");
   p_input_text.class("input-text");
   p_input_text.parent(div_input_holder);
-  let input_emoji = createInput(emoji_sample);
-  input_emoji.size(100);
-  input_emoji.input(InputEvent);
-  input_emoji.parent(div_input_holder);
-  input_emoji.class("input");
+  div_input_holder.class("div-input-holder");
+
+  let div_bingo_inputs = createDiv();
+  div_bingo_inputs.parent(div_input_holder);
+  div_bingo_inputs.class("div-bingo-inputs");
+
+  for (let i = 0; i < 3; i++) {
+    let div_3_inputs = createDiv();
+    div_3_inputs.parent(div_bingo_inputs);
+    div_3_inputs.class("div-3-inputs");
+    for (let j = 0; j < 3; j++) {
+      const idx = j * 3 + i;
+      if (idx === 4) {
+        let text_free = createP("Free");
+        text_free.parent(div_3_inputs);
+        text_free.class("text-free");
+      } else {
+        let input_emoji = createInput(emoji_sample[idx]);
+        input_emoji.size(100);
+        input_emoji.input(function () {
+          if (is_playing) return;
+          emojis[idx] = this.value().trim();
+        });
+        input_emoji.parent(div_3_inputs);
+        input_emoji.class("input");
+      }
+    }
+  }
 
   let input_button = createButton("Start");
   input_button.parent(div_input_holder);
@@ -57,7 +96,7 @@ function setup() {
 
   is_selected[4] = true;
   if (emojis == undefined) {
-    emojis = emojiStringToArray(emoji_sample);
+    emojis = emoji_sample;
   }
 }
 
@@ -71,22 +110,7 @@ function FixBoard() {
   p_bingo = createP("빙고 총 0개");
 }
 
-function InputEvent() {
-  if (is_playing) return;
-  emojis = emojiStringToArray(this.value().trim());
-}
-
-const emojiStringToArray = function (str) {
-  splited_chars = str.split(/([\uD800-\uDBFF][\uDC00-\uDFFF])/);
-  arr = [];
-  for (let i = 0; i < splited_chars.length; i++) {
-    const c = splited_chars[i];
-    if (c !== "") {
-      arr.push(c);
-    }
-  }
-  return arr;
-};
+function InputEvent(idx) {}
 
 function draw() {
   background(220);
@@ -108,7 +132,7 @@ function draw() {
       rect(0, 0, rect_size[0], rect_size[1]);
       if (idx !== 4) {
         let emoji = idx < 4 ? emojis[idx] : emojis[idx - 1];
-        text(emoji, HALF_WIDTH, HALF_HEIGHT + dy);
+        text(emojis[idx], HALF_WIDTH, HALF_HEIGHT + dy);
       } else {
         noStroke();
         fill(255);

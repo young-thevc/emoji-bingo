@@ -10,6 +10,20 @@ canvas {
   transform: translate(2px, 2px);
   margin: auto;
 }
+.input-holder {
+  align-items: center;
+}
+
+.div-bingo-inputs {
+  width: 60%;
+}
+.div-3-inputs {
+  display: flex;
+}
+.text-free {
+  width: 100%;
+}
+
 input {
   width: 100% !important;
   padding: 4px;
@@ -25,6 +39,7 @@ p {
 
 /* CSS */
 .button-74 {
+  width: 100%;
   background-color: #b6b6f7;
   border: 2px solid #422800;
   border-radius: 30px;
