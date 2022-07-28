@@ -15,6 +15,99 @@ let emoji_sample = [
   "☔︎",
   "☃︎",
 ];
+
+let emoji_examples = {
+  다영: [
+    "🦝",
+    "👩‍🍳",
+    "🔥",
+    "🍣",
+    "🥘",
+    "🍮",
+    "🍩",
+    "🍫",
+    "🔴",
+    "🟡",
+    "🟢",
+    "🚌",
+    "🚇️",
+    "☔︎",
+    "☃︎",
+  ],
+
+  재극: [
+    "⛰️",
+    "🌊",
+    "🏓",
+    "🎾",
+    "☕︎",
+    "🥃",
+    "📉",
+    "📈",
+    "💈",
+    "🧘‍♀",
+    "🛸",
+    "👫",
+    "🔫",
+    "🇯🇵",
+    "🇹🇭",
+  ],
+  대현: [
+    "📉",
+    "🐶",
+    "🐱",
+    "🥑",
+    "🎱",
+    "🥊",
+    "🚔︎",
+    "🏍︎",
+    "💪",
+    "🥇",
+    "🎤",
+    "🍻",
+    "✍︎",
+    "🧑🏻‍🏫",
+    "🏝︎",
+  ],
+  재원: [
+    "🥳",
+    "📖",
+    "🪁",
+    "🆎",
+    "🥋",
+    "🌨️",
+    "🧮",
+    "🎻",
+    "🎸",
+    "🔰",
+    "🐠",
+    "🗽",
+    "🇺🇳",
+    "🐂",
+    "🧵",
+  ],
+  규리: [
+    "😨",
+    "🐖",
+    "🤔",
+    "👐",
+    "🦾",
+    "🧑‍⚕",
+    "🧟‍♀",
+    "🛐",
+    "💘",
+    "🤝",
+    "🤼‍♀️",
+    "🤮",
+    "↗︎",
+    "💡",
+    "🙃",
+  ],
+};
+let text_emojis = "🦝👩‍🍳🔥🍣🥘🍮🍩🍫🔴🟡🟢🚌🚇️☔︎☃︎";
+let selected_name = "다영";
+
+let cnv;
 let emojis;
 const bingo_size = 3;
 let inputs = [];
@@ -34,19 +127,48 @@ let bingo_horizontal = Array.from({ length: bingo_size }, () => false);
 let bingo_vertical = Array.from({ length: bingo_size }, () => false);
 let bingo_diagonal = [false, false];
 
+let input_emojis = [];
+let text_examples;
+
 let HALF_HEIGHT, HALF_WIDTH;
 function setup() {
-  createCanvas(400, 400);
+  cnv = createCanvas(400, 400);
   HALF_HEIGHT = height / (bingo_size * 2);
   HALF_WIDTH = width / (bingo_size * 2);
   rect_size = [width / bingo_size, height / bingo_size];
 
   textSize(100);
   let div_input_holder = createDiv();
+
+  text_examples = createP(text_emojis);
+
+  let div_buttons = createDiv("");
+  div_buttons.class("div-buttons");
+  for (let name in emoji_examples) {
+    let button = createButton(name);
+    button.parent(div_buttons);
+    button.class("button-73");
+    button.mousePressed(() => {
+      text_emojis = "";
+      emoji_examples[name].map((emo, idx) => {
+        if (idx < input_emojis.length) {
+          input_emojis[idx].value(emo);
+          emojis[idx < 4 ? idx : idx + 1] = emo;
+        }
+        text_emojis += emo;
+      });
+      text_examples.html(text_emojis);
+
+      const choices = emoji_examples[name]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 8);
+      // console.log(choices);
+    });
+  }
+
   let p_input_text = createP("8개 이모지를 입력해주세요");
   p_input_text.class("input-text");
   p_input_text.parent(div_input_holder);
-  div_input_holder.class("div-input-holder");
 
   let div_bingo_inputs = createDiv();
   div_bingo_inputs.parent(div_input_holder);
@@ -57,7 +179,7 @@ function setup() {
     div_3_inputs.parent(div_bingo_inputs);
     div_3_inputs.class("div-3-inputs");
     for (let j = 0; j < 3; j++) {
-      const idx = j * 3 + i;
+      const idx = j + i * 3;
       if (idx === 4) {
         let text_free = createP("Free");
         text_free.parent(div_3_inputs);
@@ -71,6 +193,7 @@ function setup() {
         });
         input_emoji.parent(div_3_inputs);
         input_emoji.class("input");
+        input_emojis.push(input_emoji);
       }
     }
   }
@@ -82,10 +205,9 @@ function setup() {
   textAlign(CENTER, CENTER);
 
   div_input_holder.class("input-holder");
-
-  for (let i = 0; i < bingo_size; i++) {
-    for (let j = 0; j < bingo_size; j++) {
-      const idx = i + j * bingo_size;
+  for (let j = 0; j < bingo_size; j++) {
+    for (let i = 0; i < bingo_size; i++) {
+      const idx = i * bingo_size + j;
 
       emoji_positions.push([
         (width / bingo_size) * i,
@@ -107,10 +229,27 @@ function changeBingoCountText(cnt) {
 function FixBoard() {
   is_playing = true;
   removeElements();
-  p_bingo = createP("빙고 총 0개");
-}
 
-function InputEvent(idx) {}
+  let div_input_holder = createDiv();
+  div_input_holder.class("input-holder");
+  p_bingo = createP("빙고 총 0개");
+  p_bingo.parent(div_input_holder);
+  let save_button = createButton("이미지 저장하기");
+  save_button.mousePressed(function () {
+    let today = new Date();
+
+    let hours = today.getHours(); // 시
+    let minutes = today.getMinutes(); // 분
+
+    saveCanvas(
+      cnv,
+      "7EmojiBingo-" + hours + "_" + minutes + "-" + bingo_cnt + "bingo",
+      "jpg"
+    );
+  });
+  save_button.class("button-74");
+  save_button.parent(div_input_holder);
+}
 
 function draw() {
   background(220);
@@ -119,7 +258,7 @@ function draw() {
   strokeWeight(5);
   for (let i = 0; i < bingo_size; i++) {
     for (let j = 0; j < bingo_size; j++) {
-      const idx = i + j * bingo_size;
+      const idx = i * bingo_size + j;
 
       push();
       translate(emoji_positions[idx][0], emoji_positions[idx][1]);
@@ -177,10 +316,10 @@ function touchStarted() {
         (height / bingo_size) * j < mouseY &&
         mouseY < (height / bingo_size) * (j + 1)
       ) {
-        const idx = i * bingo_size + j;
+        const idx = i + j * bingo_size;
         is_selected[idx] = !is_selected[idx];
         ready_for_new_touch = false;
-        setTimeout("reset_touch()", 200);
+        setTimeout("reset_touch()", 300);
         break;
       }
     }
@@ -229,7 +368,7 @@ function checkBingo() {
   for (let i = 0; i < bingo_size; i++) {
     let is_bingo = true;
     for (let j = 0; j < bingo_size; j++) {
-      const idx = i * bingo_size + j;
+      const idx = i + j * bingo_size;
       if (is_selected[idx] == false) {
         is_bingo = false;
         break;
@@ -243,7 +382,7 @@ function checkBingo() {
     }
     is_bingo = true;
     for (let j = 0; j < bingo_size; j++) {
-      const idx = j * bingo_size + i;
+      const idx = j + i * bingo_size;
       if (is_selected[idx] == false) {
         is_bingo = false;
         break;
